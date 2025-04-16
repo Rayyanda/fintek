@@ -62,6 +62,10 @@
 
                             @if (auth()->user()->role === 'mahasiswa')
 
+                            <a href="{{ route('mhs.tagihan.index') }}" class="nav-link {{ request()->routeIs('mhs.tagihan.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
+                                Tagihan
+                            </a>
                             <a href="{{ route('mhs.penundaan.index') }}" class="nav-link {{ request()->routeIs('mhs.penundaan.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
                                 Pengajuan Penundaan
@@ -79,7 +83,7 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link {{ request()->routeIs('superadmin.penundaan.index') ? 'active' : '' }} " href="{{ route('superadmin.penundaan.index') }}">Pengajuan Penundaan</a>
-                                    <a class="nav-link" href="#">Pengajuan Perubahan</a>
+                                    <a class="nav-link {{ request()->routeIs('superadmin.perubahan-cicilan.index') ? 'active' : '' }} " href="{{ route('superadmin.perubahan-cicilan.index') }}">Pengajuan Perubahan</a>
                                     <a class="nav-link" href="#">Berjalan</a>
                                 </nav>
                             </div>
@@ -97,7 +101,12 @@
                                 </nav>
                             </div> --}}
 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRkat" aria-expanded="false" aria-controls="collapseRkat">
+                            <a href="{{ route('superadmin.rkat.index') }}" class="nav-link {{ request()->routeIs('superadmin.rkat.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-line-chart" aria-hidden="true"></i></div>
+                                RKAT
+                            </a>
+
+                            {{-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRkat" aria-expanded="false" aria-controls="collapseRkat">
                                 <div class="sb-nav-link-icon"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
                                 RKAT
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -108,7 +117,7 @@
                                     <a class="nav-link" href="#">Proses</a>
                                     <a class="nav-link" href="#">Berjalan</a>
                                 </nav>
-                            </div>
+                            </div> --}}
 
                             <div class="sb-sidenav-menu-heading">Operasional</div>
                             <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.index') ? 'active' : '' }} ">
@@ -213,12 +222,13 @@
                 </footer>
             </div>
         </div>
+        @yield('script')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{ asset('js/script.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         {{-- <script src="assets/demo/chart-area-demo.js"></script>
         <script src="assets/demo/chart-bar-demo.js"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
     </body>
 </html>

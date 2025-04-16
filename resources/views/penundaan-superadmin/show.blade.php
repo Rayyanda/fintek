@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($student->penundaan->cicilan as $item)
+                    @foreach ($student->penundaan->cicilans as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->tgl_jatuh_tempo }}</td>
@@ -70,7 +70,9 @@
                             <td>{{ $item->status }}</td>
                             <td>{{ $item->tgl_pembayaran }}</td>
                             <td>
+                                @if ($item->status != 'Lunas')
                                 <a href="#" class="btn btn-success btn-sm"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -79,6 +81,59 @@
         </div>
     </div>
 </div>
+
+<div class="card mb-3 shadow">
+    <div class="card-header">Pengajuan Perubahan</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ID Cicilan</th>
+                        <th scope="col">Jatuh Tempo</th>
+                        <th scope="col">Tanggal Baru Diajukan</th>
+                        <th scope="col">Jumlah Cicilan Awal</th>
+                        <th scope="col">Jumlah Cicilan Terbaru</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach ($student->penundaan->cicilans as $item)
+                        @if ($item->perubahan)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->tgl_jatuh_tempo }}</td>
+                            <td>{{ $item->perubahan->tgl_jatuh_tempo }}</td>
+                            <td>Rp. {{ number_format($item->cicilan) }}</td>
+                            <td>Rp. {{ number_format($item->perubahan->cicilan) }}</td>
+                            <td>
+                                @if ($item->perubahan->status === 'Disetujui')
+                                <span class="badge text-bg-success">{{ $item->perubahan->status }}</span>
+                                @else
+
+                                <span class="badge text-bg-warning">{{ $item->perubahan->status }}</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($item->perubahan->status !== 'Disetujui')
+                                <a href="#" class="btn btn-success btn-sm"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+                                @endif
+                            </td>
+                        </tr>
+
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">

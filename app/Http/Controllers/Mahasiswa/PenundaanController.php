@@ -15,10 +15,12 @@ class PenundaanController extends Controller
     //
     public function index()
     {
-        $tahunSekarang = date('Y');
-        $tahunAjaran = $tahunSekarang . '/' . ($tahunSekarang + 1);
+        $dokumen = Penundaan::whereHas('tagihan', function ($query) {
+            $query->where('student_id', auth()->user()->student->student_id);
+        })
+        ->with(['tagihan', 'status', 'cicilans', 'cicilans.perubahan'])
+        ->get();
 
-        $dokumen = Penundaan::where('tahun_ajaran','=',$tahunAjaran)->where('student_id','=',auth()->user()->student->student_id)->with(['student','status','cicilan'])->first();
 
         return view('penundaan-mahasiswa.index', compact('dokumen'));
     }
@@ -28,7 +30,7 @@ class PenundaanController extends Controller
         $tahunSekarang = date('Y');
         $tahunAjaran = $tahunSekarang . '/' . ($tahunSekarang + 1);
 
-        $dokumen = Penundaan::where('tahun_ajaran','=',$tahunAjaran)->with(['student','status','cicilan'])->first();
+        $dokumen = Penundaan::where('tahun_ajaran','=',$tahunAjaran)->with(['student','status','cicilans'])->first();
 
         return view('penundaan-mahasiswa.edit', compact('dokumen'));
     }
@@ -86,7 +88,7 @@ class PenundaanController extends Controller
 
     public function pdf($student_id)
     {
-        $penundaan = Penundaan::where('student_id', '=',$student_id)->with(['student','status','cicilan'])->first();
+        $penundaan = Penundaan::where('student_id', '=',$student_id)->with(['student','status','cicilans'])->first();
         $pdf = Pdf::loadView('pdf.ajuan',['penundaans'=>$penundaan])->setPaper('f4','potrait');
         return $pdf->stream('ajuan.pdf');
         //return view('pdf.ajuan',['penundaans'=>$penundaan]);

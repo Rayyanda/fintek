@@ -13,7 +13,7 @@ class PenundaanController extends Controller
     //
     public function index()
     {
-        $penundaan = Penundaan::with(['student','status','cicilan'])->paginate(10);
+        $penundaan = Penundaan::with(['student','status','cicilans','cicilans.perubahan'])->get();
         $status = Status::all();
 
         return view('penundaan-superadmin.index',['penundaans'=>$penundaan,'status'=>$status]);
@@ -22,7 +22,7 @@ class PenundaanController extends Controller
     public function search(Request $request)
     {
         $status_id = $request->status_id;
-        $penundaan = Penundaan::where('status_id','=',$status_id)->with(['student','status','cicilan'])->paginate(10);
+        $penundaan = Penundaan::where('status_id','=',$status_id)->with(['student','status','cicilans'])->get();
         $status = Status::all();
         return view('penundaan-superadmin.index',['penundaans'=>$penundaan,'status'=>$status]);
     }
@@ -43,7 +43,7 @@ class PenundaanController extends Controller
 
     public function show($student_id)
     {
-        $student = Student::where('student_id','=',$student_id)->with(['user','penundaan','penundaan.status','penundaan.cicilan'])->first();
+        $student = Student::where('student_id','=',$student_id)->with(['user','penundaan','penundaan.status','penundaan.cicilans','penundaan.cicilans.perubahan'])->first();
         return view('penundaan-superadmin.show',['student'=>$student]);
     }
 }

@@ -33,8 +33,8 @@
                     </div>
                 </div>
             </form>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
+            <div class="table-responsive p-2">
+                <table id="dataTable" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">No</th>
@@ -61,7 +61,23 @@
                             <td>{{ $dokumen->opsi_penundaan }}</td>
                             <td>{{ $dokumen->tahun_ajaran }}</td>
                             <td>{{ $dokumen->semester }}</td>
-                            <td>{{ $dokumen->status->name }}</td>
+                            <td>
+                                @switch($dokumen->status_id)
+                                    @case(2)
+                                        <span class="badge text-bg-secondary">{{ $dokumen->status->name }}</span>
+                                        @break
+                                    @case(3)
+                                        <span class="badge text-bg-warning">{{ $dokumen->status->name }}</span>
+                                        @break
+                                    @case(4)
+                                        <span class="badge text-bg-success">{{ $dokumen->status->name }}</span>
+                                        @break
+
+                                    @default
+                                    <span class="badge text-bg-danger">{{ $dokumen->status->name }}</span>
+
+                                @endswitch
+                            </td>
                             <td>
                                 @if ($dokumen->status_id !== 4)
                                 <a title="Update Status" href="#" data-bs-toggle="modal" onclick="loadData('{{ $dokumen->id }}','{{ $dokumen->student->nim }}','{{ $dokumen->student->user->name }}','{{ $dokumen->status_id }}')" data-bs-target="#editModal" class="btn btn-success"><i class="fa fa-pencil-alt"></i></a>
@@ -76,7 +92,6 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{ $penundaans->links() }}
             </div>
             <p class="mb-0">Keterangan Opsi</p>
             <ul>
@@ -136,5 +151,6 @@
             document.getElementById('nama').value = nama;
             document.getElementById('status').value = status_id;
         }
+        let tbl = document.getElementById('dataTable');
       </script>
 @endsection

@@ -96,4 +96,26 @@ class CicilanController extends Controller
             'status' => 'Belum Lunas',
         ]);
     }
+
+    public function update(Request $request, $penundaan_id)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:pencicilans,id',
+            'bukti'=>'required|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        $bukti = $request->file('bukti');
+        $bukti->storeAs('public/images/keuangan/pelunasan', $bukti->hashName());
+        $today = date('Y-m-d');
+
+        $pencicilan = Pencicilan::where('id','=',$request->id)
+        ->where('penundaan_id','=',$penundaan_id)->update([
+            'bukti' => $bukti->hashName(),
+            'status' => 'Lunas',
+            'tgl_pembayaran' => $today,
+        ]);
+
+        return redirect()->route('mhs.penundaan.index')->with('success','Berhasil Melakukan Pembayaran');
+
+    }
 }

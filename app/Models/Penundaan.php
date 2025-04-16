@@ -12,7 +12,7 @@ class Penundaan extends Model
     //
     protected $table = 'penundaans';
     protected $fillable = [
-        'student_id',
+        'tagihan_id',
         'opsi_penundaan',
         'jumlah_tunggakan',
         'alasan',
@@ -21,17 +21,27 @@ class Penundaan extends Model
         'status_id'
     ];
 
-    public function student():BelongsTo
+    public function tagihan()
     {
-        return $this->belongsTo(Student::class,'student_id','student_id');
+        return $this->belongsTo(Tagihan::class,'tagihan_id','tagihan_id');
     }
+
+    public function getStudentAttribute()
+    {
+        return $this->tagihan->student;
+    }
+
+    // public function student():BelongsTo
+    // {
+    //     return $this->belongsTo(Student::class,'student_id','student_id');
+    // }
 
     public function status():HasOne
     {
         return $this->hasOne(Status::class,'id','status_id');
     }
 
-    public function cicilan():HasMany
+    public function cicilans():HasMany
     {
         return $this->hasMany(Pencicilan::class,'penundaan_id','id');
     }

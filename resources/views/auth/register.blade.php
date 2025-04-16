@@ -8,7 +8,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12 col-sm-12">
             <div class="card bg-light shadow" style="--bs-bg-opacity: .5;">
                 <div class="card-body">
                     <h3 class="mb-2">{{ __('Register') }}</h3>
@@ -168,7 +168,29 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane fade" id="nav-dosen" role="tabpanel" aria-labelledby="nav-dosen-tab" tabindex="0">...</div>
+                        <div class="tab-pane fade" id="nav-dosen" role="tabpanel" aria-labelledby="nav-dosen-tab" tabindex="0">
+                            <form action="#" method="post">
+                                <div class="row mb-3 align-items-center">
+                                    <label for="namaDosen" class="col-form-label col-md-2">{{ __('Name') }}</label>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="text" name="nama" id="namaDosen" class="form-control">
+                                            <label for="namaDosen">{{ __('Name') }}</label>
+                                        </div>
+                                    </div>
+                                    <label for="nipDosen" class="col-form-label col-md-2">NIP</label>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="text" name="nip_dosen" id="nipDosen" required class="form-control">
+                                            <label for="nipDosen">{{ __('NIP') }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3 align-items-center">
+
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 

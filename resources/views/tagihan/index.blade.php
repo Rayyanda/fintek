@@ -1,0 +1,116 @@
+@extends('layouts.template')
+
+@section('content')
+<h1 class="mt-4">Tagihan</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      {{-- <li class="breadcrumb-item"><a href="{{ route('superadmin.rkat.index') }}">RKAT</a></li> --}}
+      <li class="breadcrumb-item active" aria-current="page">Tagihan Anda</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTagihanModal">Baru</a>
+</div>
+
+<div class="card shadow mb-3">
+    <div class="card-body">
+        <div class="table-responsive p-2">
+            <table class="table table-striped table-bordered" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Semester</th>
+                        <th>Jenis Tagihan</th>
+                        <th>Nominal Tagihan</th>
+                        <th>Denda</th>
+                        <th>Potongan</th>
+                        <th>Total</th>
+                        <th>Total Bayar</th>
+                        <th>Sisa</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach ($tagihan as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->student->user->name }}</td>
+                            <td>{{ $item->tahun_ajaran }}</td>
+                            <td>{{ $item->semester }}</td>
+                            <td>{{ $item->jenis_tagihan }}</td>
+                            <td>{{ $item->nominal }}</td>
+                            <td>{{ $item->denda }}</td>
+                            <td>{{ $item->potongan }}</td>
+                            <td>{{ $item->total }}</td>
+                            <td>{{ $item->terbayar }}</td>
+                            <td>{{ $item->sisa }}</td>
+                            <td>{{ $item->status }}</td>
+                            <td></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addTagihanModal" tabindex="-1" aria-labelledby="addTagihanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form action="#" method="post">
+                @csrf
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addTagihanModalLabel">Masukkan Tagihan</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2 align-items-center">
+                        <label for="totalTagihan" class="col-md-2 col-form-label">Total Tagihan</label>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="number" placeholder="Rp. 7.500.000" name="nominal" required id="totalTagihan" class="form-control">
+                                <label for="totalTagihan">Total Tagihan</label>
+                            </div>
+                        </div>
+                        <label for="jenisTagihan" class="col-form-label col-md-1">Jenis Tagihan</label>
+                        <div class="col-md-3">
+                            <input type="text" name="jenis_tagihan" placeholder="BPP / SKS / Lainnya" required id="jenisTagihan" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-2 align-items-center">
+                        <label for="tahunAjaran" class="col-form-label col-md-2">Tahun Ajaran</label>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select name="tahun_ajaran" class="form-control" required id="tahunAjaran">
+                                    @for ($i = 2024; $i <= 2029; $i++)
+                                        <option value="{{ $i }}/{{ $i+1 }}">{{ $i }}/{{ $i+1 }}</option>
+                                    @endfor
+                                </select>
+                                <label for="tahunAjaran">Tahun Ajaran</label>
+                            </div>
+                        </div>
+                        <label for="semester" class="col-form-label col-md-2">Semester</label>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <select name="semester" class="form-control" required id="semester">
+                                    <option value="Ganjil">Ganjil</option>
+                                    <option value="Genap">Genap</option>
+                                </select>
+                                <label for="semester">Semester</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Tambahkan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@endsection
