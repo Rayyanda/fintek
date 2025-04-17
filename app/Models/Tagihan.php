@@ -10,7 +10,7 @@ class Tagihan extends Model
     protected $table = 'tagihans';
     protected $fillable = [
         'tagihan_id',
-        'studen_id',
+        'student_id',
         'tahun_ajaran',
         'semester',
         'jenis_tagihan',

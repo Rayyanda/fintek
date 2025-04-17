@@ -33,6 +33,9 @@ Route::prefix('mhs')->middleware(['auth','role:mahasiswa'])->group(function(){
         //index
         Route::get('/',[TagihanController::class,'index'])->name('mhs.tagihan.index');
 
+        //create
+        Route::post('/create',[TagihanController::class,'store'])->name('mhs.tagihan.store');
+
     });
 
     //penundaan

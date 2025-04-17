@@ -9,6 +9,13 @@
     </ol>
 </nav>
 
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('success') }}.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="mb-3">
     <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTagihanModal">Baru</a>
 </div>
@@ -42,13 +49,24 @@
                             <td>{{ $item->tahun_ajaran }}</td>
                             <td>{{ $item->semester }}</td>
                             <td>{{ $item->jenis_tagihan }}</td>
-                            <td>{{ $item->nominal }}</td>
+                            <td>Rp. {{ number_format($item->nominal) }}</td>
                             <td>{{ $item->denda }}</td>
                             <td>{{ $item->potongan }}</td>
                             <td>{{ $item->total }}</td>
                             <td>{{ $item->terbayar }}</td>
                             <td>{{ $item->sisa }}</td>
-                            <td>{{ $item->status }}</td>
+                            <td>
+                                @switch($item->status)
+                                    @case('Valid')
+                                        <span class="badge text-bg-primary">{{ $item->status }}</span>
+                                        @break
+                                    @case('Penundaan')
+                                        <span class="badge text-bg-warning">{{ $item->status }}</span>
+                                        @break
+                                    @default
+                                        <span class="badge text-bg-secondary">{{ $item->status }}</span>
+                                @endswitch
+                            </td>
                             <td></td>
                         </tr>
                     @endforeach
@@ -60,7 +78,7 @@
 <div class="modal fade" id="addTagihanModal" tabindex="-1" aria-labelledby="addTagihanModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <form action="#" method="post">
+            <form action="{{ route('mhs.tagihan.store') }}" method="post">
                 @csrf
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="addTagihanModalLabel">Masukkan Tagihan</h1>
