@@ -44,4 +44,22 @@ class Student extends Model
     {
         return $this->hasMany(Tagihan::class,'student_id','student_id');
     }
+
+    public function pencicilan()
+    {
+        return $this->hasMany(PenundaanTagihan::class,'student_id','student_id');
+    }
+    // Student.php
+public function penundaanLangsung()
+{
+    return $this->hasManyThrough(
+        Pencicilan::class,
+        PenundaanTagihan::class,
+        'student_id', // Foreign key di Tagihan
+        'id',         // Local key di Penundaan
+        'student_id', // Local key di Student
+        'tagihan_id'  // Foreign key di Penundaan (jika one-to-one)
+    );
+}
+
 }

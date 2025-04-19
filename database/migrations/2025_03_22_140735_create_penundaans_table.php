@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('penundaans', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('tagihan_id')->constrained('tagihans','tagihan_id')->onDelete('cascade');
+            //$table->foreignUuid('tagihan_id')->constrained('tagihans','tagihan_id')->onDelete('cascade');
             //$table->foreignUuid('student_id')->constrained('students','student_id')->cascadeOnDelete();
             $table->enum('opsi_penundaan',['1','2']);
             $table->string('jenis_tagihan');

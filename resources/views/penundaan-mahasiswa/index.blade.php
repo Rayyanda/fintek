@@ -31,9 +31,9 @@
     @endforeach
     @endif
 
-    <div class="mb-3 d-flex flex-col">
+    {{-- <div class="mb-3 d-flex flex-col">
         <a href="{{ route('mhs.penundaan.create') }}" class="btn btn-success"><i class="fas fa-plus"></i> Buat Baru</a>
-    </div>
+    </div> --}}
     <div class="card shadow mb-3">
         <div class="card-body">
             <div class="table-responsive">

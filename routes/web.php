@@ -11,7 +11,11 @@ use App\Http\Controllers\RKATController;
 use App\Http\Controllers\Superadmin\DetailRKATController;
 use App\Http\Controllers\Superadmin\MahasiswaController;
 use App\Http\Controllers\Superadmin\PenundaanController as SuperadminPenundaanController;
+use App\Http\Controllers\TagihanController as SuperadminTagihanController;
+use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,7 +49,7 @@ Route::prefix('mhs')->middleware(['auth','role:mahasiswa'])->group(function(){
         Route::get('/',[PenundaanController::class,'index'])->name('mhs.penundaan.index');
 
         //create
-        Route::get('/create',[PenundaanController::class,'create'])->name('mhs.penundaan.create');
+        Route::get('/{tagihan_id}/create',[PenundaanController::class,'create'])->name('mhs.penundaan.create');
 
         //store
         Route::post('/store',[PenundaanController::class,'store'])->name('mhs.penundaan.store');
@@ -120,6 +124,16 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
 
         });
 
+        //tagihan
+        Route::prefix('tagihan')->group(function(){
+
+            //index
+            Route::get('/',[SuperadminTagihanController::class,'index'])->middleware(['auth','role:superadmin,admin'])->name('admin.tagihan.index');
+
+            Route::post('/update',[SuperadminTagihanController::class,'update'])->middleware(['auth','role:superadmin,admin'])->name('admin.tagihan.update');
+
+        });
+
 
     });
 
@@ -128,6 +142,22 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
         Route::prefix('mahasiswa')->group(function(){
 
             Route::get('/',[MahasiswaController::class,'index'])->name('superadmin.mahasiswa.index');
+
+        });
+
+        Route::prefix('tahun_ajaran')->group(function(){
+
+            //index
+            Route::get('/',[TahunAjaranController::class,'index'])->name('tahunAjaran.index');
+
+            //store
+            Route::post('/store',[TahunAjaranController::class,'store'])->name('tahunAjaran.store');
+
+            //delete
+            Route::delete('/{id}/delete',[TahunAjaranController::class,'destroy'])->name('tahunAjaran.delete');
+
+            //update
+            Route::post('/{id}/update',[TahunAjaranController::class,'update'])->name('tahunAjaran.update');
 
         });
 

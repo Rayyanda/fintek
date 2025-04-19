@@ -11,7 +11,7 @@ class MahasiswaController extends Controller
     //
     public function index()
     {
-        $mahasiswa = Student::with('user','penundaan','penundaan.status','penundaan.cicilans')->get();
+        $mahasiswa = Student::with('user','tagihan','tagihan.penundaan.status','tagihan.penundaan.cicilans')->get();
         return view('mahasiswa.index', ['mahasiswa'=>$mahasiswa]);
     }
 }

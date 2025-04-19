@@ -28,8 +28,13 @@ class Tagihan extends Model
         return $this->belongsTo(Student::class,'student_id','student_id');
     }
 
-    public function penundaan()
+    public function penundaant()
     {
-        return $this->hasOne(Penundaan::class,'tagihan_id','tagihan_id');
+        return $this->belongsTo(PenundaanTagihan::class,'tagihan_id', 'tagihan_id');
+    }
+
+    public function penundaans()
+    {
+        return $this->belongsToMany(Penundaan::class,'penundaan_tagihans','tagihan_id','penundaan_id');
     }
 }

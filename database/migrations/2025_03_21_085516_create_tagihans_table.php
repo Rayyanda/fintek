@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('total')->default(0);
             $table->integer('terbayar')->default(0);
             $table->integer('sisa')->default(0);
-            $table->string('status');
+            $table->string('status')->default('Belum Divalidasi');
             $table->timestamps();
         });
     }

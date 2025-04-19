@@ -75,6 +75,11 @@
 
                             <div class="sb-sidenav-menu-heading">Keuangan</div>
 
+                            <a href="{{ route('admin.tagihan.index') }}" class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-line-chart" aria-hidden="true"></i></div>
+                                Tagihan Mahasiswa
+                            </a>
+
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fa fa-credit-card"></i></div>
                                 Penundaan
@@ -138,6 +143,21 @@
                             <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
                                 User
+                            </a>
+
+                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-font-awesome" aria-hidden="true"></i></div>
+                                Tahun Ajaran
+                            </a>
+
+
+
+                            @endif
+
+                            @if (auth()->user()->role === 'admin')
+                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+                                Tahun Ajaran
                             </a>
 
                             @endif

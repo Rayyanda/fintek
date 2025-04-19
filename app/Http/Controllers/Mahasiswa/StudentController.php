@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -29,7 +30,7 @@ class StudentController extends Controller
             'profile' =>'image|mimes:png,jpg,jpeg|max:2048',
 
         ]);
-        $user = Student::where('id','=',auth()->user()->student->id)->first();
+        $user = Student::where('id','=',Auth::user()->student->id)->first();
 
         $imgProfile = $request->file('profile');
 

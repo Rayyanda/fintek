@@ -15,6 +15,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
+@if (session('error'))
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Gagal!</strong> {{ session('error') }}.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
 <div class="mb-3">
     <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTagihanModal">Baru</a>
@@ -34,9 +40,9 @@
                         <th>Nominal Tagihan</th>
                         <th>Denda</th>
                         <th>Potongan</th>
-                        <th>Total</th>
                         <th>Total Bayar</th>
                         <th>Sisa</th>
+                        <th>Penundaan</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -52,13 +58,22 @@
                             <td>Rp. {{ number_format($item->nominal) }}</td>
                             <td>{{ $item->denda }}</td>
                             <td>{{ $item->potongan }}</td>
-                            <td>{{ $item->total }}</td>
                             <td>{{ $item->terbayar }}</td>
                             <td>{{ $item->sisa }}</td>
+                            <td>
+                                @if ($item->tagihans != null)
+                                <a href="{{ route('mhs.penundaan.index') }}" class="btn btn-success btn-sm"><i class="fa fa-info-circle"></i> Detail</a>
+                                @else
+                                <span class="badge text-bg-warning">Tidak ada</span>
+                                @endif
+                            </td>
                             <td>
                                 @switch($item->status)
                                     @case('Valid')
                                         <span class="badge text-bg-primary">{{ $item->status }}</span>
+                                        @break
+                                    @case('Lunas')
+                                        <span class="badge text-bg-success">{{ $item->status }}</span>
                                         @break
                                     @case('Penundaan')
                                         <span class="badge text-bg-warning">{{ $item->status }}</span>
@@ -67,7 +82,49 @@
                                         <span class="badge text-bg-secondary">{{ $item->status }}</span>
                                 @endswitch
                             </td>
-                            <td></td>
+                            <td>
+                                <div class="btn-group dropstart">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                      <i class="fa fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        @switch($item->status)
+                                            {{-- @case('Valid')
+                                                <span class="badge text-bg-primary">{{ $item->status }}</span>
+                                                @break
+                                            @case('Lunas')
+                                                <span class="badge text-bg-success">{{ $item->status }}</span>
+                                                @break --}}
+                                            @case('Penundaan')
+                                                <span class="badge text-bg-warning">{{ $item->status }}</span>
+                                                @break
+                                            @case('Belum Lunas')
+                                                <li>
+                                                    <a href="https://newportal.unsada.ac.id/siakad/list_tagihanmhs" target="_blank" class="dropdown-item" title="Bayar">Bayar</a>
+                                                </li>
+                                                @if ($item->tagihans == null)
+                                                <li>
+                                                    <a href="{{ route('mhs.penundaan.create',$item->tagihan_id) }}" class="dropdown-item" title="Penundaan">Ajukan Penundaan</a>
+                                                </li>
+                                                @endif
+                                                @break
+
+                                            @default
+                                                <li>
+                                                    <a href="#" onclick="alert('Tunggu proses validasi oleh Admin')" class="dropdown-item" title="Penundaan">Ajukan Penundaan</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" onclick="alert('Tunggu proses validasi oleh Admin')"  class="dropdown-item" title="Bayar">Bayar</a>
+                                                </li>
+
+
+                                        @endswitch
+                                      {{-- <li><a class="dropdown-item" href="#">Menu item</a></li>
+                                      <li><a class="dropdown-item" href="#">Menu item</a></li>
+                                      <li><a class="dropdown-item" href="#">Menu item</a></li> --}}
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
