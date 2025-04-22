@@ -36,7 +36,11 @@
                             <td>{{ $item->jenis_kelas }}</td>
                             <td class="text-center" >
                                 @if ($item->penundaan != null)
-                                <a href="{{ route('superadmin.penundaan.show',$item->student_id) }}" class="btn btn-success btn-sm"><i class="fa fa-info-circle"></i> Detail</a>
+                                <form action="{{ route('superadmin.penundaan.show',$item->student_id) }}" method="get">
+                                    <input type="text" name="tahun_ajaran" id="tahunAjaran" value="{{ $tahun_ajaran->tahun_ajaran }}" hidden>
+                                    <input type="text" name="semester" id="semester" value="{{ $tahun_ajaran->semester }}" hidden>
+                                    <button type="submit" class="btn btn-success btn-sm" title="Lihat Detail"><i class="fa fa-eye"></i></button>
+                                </form>
                                 @else
                                 <span class="badge text-bg-warning">Tidak ada</span>
                                 @endif

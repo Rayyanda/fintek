@@ -82,7 +82,12 @@
                                 @if ($dokumen->status_id !== 4)
                                 <a title="Update Status" href="#" data-bs-toggle="modal" onclick="loadData('{{ $dokumen->id }}','{{ $dokumen->student->nim }}','{{ $dokumen->student->user->name }}','{{ $dokumen->status_id }}')" data-bs-target="#editModal" class="btn btn-success"><i class="fa fa-pencil-alt"></i></a>
                                 @else
-                                <a href="{{ route('superadmin.penundaan.show', $dokumen->student->student_id) }}" class="btn btn-primary" title="Detail" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                <form action="{{ route('superadmin.penundaan.show',$dokumen->student->student_id) }}" method="get">
+                                    <input type="text" name="tahun_ajaran" id="tahunAjaran" value="{{ $dokumen->tahun_ajaran }}" hidden>
+                                    <input type="text" name="semester" id="semester" value="{{ $dokumen->semester }}" hidden>
+                                    <button type="submit" class="btn btn-primary btn-sm" title="Lihat Detail"><i class="fa fa-eye"></i></button>
+                                </form>
+                                {{-- <a href="{{ route('superadmin.penundaan.show', $dokumen->student->student_id) }}" class="btn btn-primary" title="Detail" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a> --}}
                                 @endif
                             </td>
                             @php

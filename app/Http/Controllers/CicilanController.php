@@ -98,6 +98,7 @@ class CicilanController extends Controller
         // ]);
     }
 
+    //function untuk upload bukti bayar
     public function update(Request $request, $penundaan_id)
     {
         $validated = $request->validate([
@@ -118,5 +119,18 @@ class CicilanController extends Controller
 
         return redirect()->route('mhs.penundaan.index')->with('success','Berhasil Melakukan Pembayaran');
 
+    }
+    //function untuk mengubah data cicilan
+    public function edit(Request $request)
+    {
+        $validated = $request->validate([
+            'cicilan_id' => 'required|exists:pencicilans,id',
+            'tgl_jatuh_tempo' => 'required|date',
+            'cicilan' => 'required|numeric',
+        ]);
+
+
+
+        //return redirect()->back()->with('success','Berhasil update data');
     }
 }

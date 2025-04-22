@@ -21,6 +21,14 @@ class PerubahanCicilanController extends Controller
         ]);
 
         $cicilan = Pencicilan::where('id','=',$request->id)->first();
+        $cek = PerubahanCicilan::where('cicilan_id','=',$request->id)->first();
+        if($cek){
+            $cek->update([
+                'cicilan' => $request->cicilan,
+                'tgl_jatuh_tempo' => $request->tgl_jatuh_tempo,
+            ]);
+            return redirect()->back()->with('success','Berhail Mengupdate ajuan.');
+        }
 
         $tanggalBaru = Carbon::parse($request->tgl_jatuh_tempo);
         $tanggalLama = Carbon::parse($cicilan->tgl_jatuh_tempo); // bisa dari DB juga
@@ -36,13 +44,13 @@ class PerubahanCicilanController extends Controller
             'status' => 'Diajukan'
         ]);
 
-        return redirect()->route('mhs.penundaan.index')->with('success','Berhail membuat ajuan.');
+        return redirect()->back()->with('success','Berhail membuat ajuan.');
 
     }
 
     public function destroy($id)
     {
         PerubahanCicilan::where('id','=',$id)->delete();
-        return redirect()->route('mhs.penundaan.index')->with('success','Berhasil membatalkan ajuan');
+        return redirect()->back()->with('success','Berhasil membatalkan ajuan');
     }
 }

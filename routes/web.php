@@ -11,6 +11,7 @@ use App\Http\Controllers\RKATController;
 use App\Http\Controllers\Superadmin\DetailRKATController;
 use App\Http\Controllers\Superadmin\MahasiswaController;
 use App\Http\Controllers\Superadmin\PenundaanController as SuperadminPenundaanController;
+use App\Http\Controllers\Superadmin\UserController;
 use App\Http\Controllers\TagihanController as SuperadminTagihanController;
 use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
@@ -32,15 +33,15 @@ Route::get('/forbidden', function(){
 Route::prefix('mhs')->middleware(['auth','role:mahasiswa'])->group(function(){
 
     //Tagihan
-    Route::prefix('tagihan')->group(function(){
+    // Route::prefix('tagihan')->group(function(){
 
-        //index
-        Route::get('/',[TagihanController::class,'index'])->name('mhs.tagihan.index');
+    //     //index
+    //     Route::get('/',[TagihanController::class,'index'])->name('mhs.tagihan.index');
 
-        //create
-        Route::post('/create',[TagihanController::class,'store'])->name('mhs.tagihan.store');
+    //     //create
+    //     Route::post('/create',[TagihanController::class,'store'])->name('mhs.tagihan.store');
 
-    });
+    // });
 
     //penundaan
     Route::prefix('penundaan')->group(function(){
@@ -49,7 +50,10 @@ Route::prefix('mhs')->middleware(['auth','role:mahasiswa'])->group(function(){
         Route::get('/',[PenundaanController::class,'index'])->name('mhs.penundaan.index');
 
         //create
-        Route::get('/{tagihan_id}/create',[PenundaanController::class,'create'])->name('mhs.penundaan.create');
+        Route::get('/create',[PenundaanController::class,'create'])->name('mhs.penundaan.create');
+
+        //show
+        Route::get('/show',[PenundaanController::class,'show'])->name('mhs.penundaan.show');
 
         //store
         Route::post('/store',[PenundaanController::class,'store'])->name('mhs.penundaan.store');
@@ -109,6 +113,12 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
             //index
             Route::get('/',[\App\Http\Controllers\Superadmin\PerubahanCicilanController::class,'index'])->name('superadmin.perubahan-cicilan.index');
 
+            //update
+            Route::post('/update',[\App\Http\Controllers\Superadmin\PerubahanCicilanController::class,'update'])->name('superadmin.perubahan-cicilan.update');
+
+            //tolak ajuan
+            Route::post('/reject',[\App\Http\Controllers\Superadmin\PerubahanCicilanController::class,'cancel'])->name('superadmin.perubahan-cicilan.reject');
+
         });
 
         //RKAT
@@ -134,6 +144,14 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
 
         });
 
+
+    });
+
+    //users
+    Route::prefix('users')->group(function(){
+
+        //index
+        Route::get('/',[UserController::class,'index'])->name('superadmin.users.index');
 
     });
 

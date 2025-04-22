@@ -41,9 +41,15 @@ class PenundaanController extends Controller
         return redirect()->route('superadmin.penundaan.index')->with('success','Berhasil mengupdate status');
     }
 
-    public function show($student_id)
+    public function show(Request $request,$student_id)
     {
-        $student = Student::where('student_id','=',$student_id)->with(['user','penundaan','penundaan.status','penundaan.cicilans','penundaan.cicilans.perubahan'])->first();
-        return view('penundaan-superadmin.show',['student'=>$student]);
+        $tahun_ajaran = $request->tahun_ajaran;
+        $semester = $request->semester;
+        $student = Penundaan::where('student_id','=',$student_id)
+            ->where('tahun_ajaran','=',$tahun_ajaran)
+            ->where('semester','=', $semester)
+            ->with(['student.user','student','status','cicilans','cicilans.perubahan'])
+            ->first();
+        return view('penundaan-superadmin.show',['penundaan'=>$student]);
     }
 }

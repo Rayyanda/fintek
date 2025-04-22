@@ -5,14 +5,11 @@
 <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item active">Pengajuan Perubahan</li>
 </ol>
-@php
-    $tahunSekarang = date('Y');
-    $tahunAjaran = $tahunSekarang . '/' . ($tahunSekarang + 1);
-@endphp
-<p>Tahun Ajaran : {{ $tahunAjaran }}</p>
+<p>Tahun Ajaran : {{ $tahun_ajaran->tahun_ajaran }}</p>
+<p>Semester : {{ $tahun_ajaran->semester }}</p>
 <div class="card mb-3 shadow">
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive p-2">
             <table class="table table-striped table-bordered" id="dataTable">
                 <thead>
                     <tr>
@@ -35,7 +32,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $items->student->nim }}</td>
                         <td>{{ $items->student->user->name}}</td>
-                        <td>{{ $item->perubahan->tgl_jatuh_tempo }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->perubahan->tgl_jatuh_tempo)->format('d M Y') }}</td>
                         <td>Rp. {{ number_format($item->cicilan) }}</td>
                         <td>Rp. {{ number_format($item->perubahan->cicilan) }}</td>
                         <td>
@@ -49,7 +46,11 @@
 
                         <td>
                             @if ($item->perubahan->status !== 'Disetujui')
-                            <a href="#" class="btn btn-success btn-sm"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>
+                            <form action="{{ route('superadmin.penundaan.show',$items->student->student_id) }}" method="get">
+                                <input type="text" name="tahun_ajaran" id="tahunAjaran" value="{{ $items->tahun_ajaran }}" hidden>
+                                <input type="text" name="semester" id="semester" value="{{ $items->semester }}" hidden>
+                                <button type="submit" class="btn btn-primary" title="Lihat Detail"><i class="fa fa-eye"></i></button>
+                            </form>
                             @endif
                         </td>
                     </tr>

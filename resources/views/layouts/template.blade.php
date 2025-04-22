@@ -62,10 +62,10 @@
 
                             @if (auth()->user()->role === 'mahasiswa')
 
-                            <a href="{{ route('mhs.tagihan.index') }}" class="nav-link {{ request()->routeIs('mhs.tagihan.index') ? 'active' : '' }} ">
+                            {{-- <a href="{{ route('mhs.tagihan.index') }}" class="nav-link {{ request()->routeIs('mhs.tagihan.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
                                 Tagihan
-                            </a>
+                            </a> --}}
                             <a href="{{ route('mhs.penundaan.index') }}" class="nav-link {{ request()->routeIs('mhs.penundaan.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
                                 Pengajuan Penundaan
@@ -75,10 +75,10 @@
 
                             <div class="sb-sidenav-menu-heading">Keuangan</div>
 
-                            <a href="{{ route('admin.tagihan.index') }}" class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }} ">
+                            {{-- <a href="{{ route('admin.tagihan.index') }}" class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-line-chart" aria-hidden="true"></i></div>
                                 Tagihan Mahasiswa
-                            </a>
+                            </a> --}}
 
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fa fa-credit-card"></i></div>
@@ -130,6 +130,10 @@
                                 Inventaris
                             </a>
 
+                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-font-awesome" aria-hidden="true"></i></div>
+                                Tahun Ajaran
+                            </a>
                             <div class="sb-sidenav-menu-heading">Pengguna</div>
 
                             <a href="{{ route('superadmin.mahasiswa.index') }}" class="nav-link {{ request()->routeIs('superadmin.mahasiswa.index') ? 'active' : '' }} ">
@@ -140,15 +144,11 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-circle" aria-hidden="true"></i></div>
                                 Dosen
                             </a>
-                            <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.index') ? 'active' : '' }} ">
+                            <a href="{{ route('superadmin.users.index') }}" class="nav-link {{ request()->routeIs('superadmin.users.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
-                                User
+                                Users
                             </a>
 
-                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
-                                <div class="sb-nav-link-icon"><i class="fas fa-font-awesome" aria-hidden="true"></i></div>
-                                Tahun Ajaran
-                            </a>
 
 
 

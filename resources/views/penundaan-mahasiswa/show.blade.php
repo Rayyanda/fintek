@@ -9,6 +9,22 @@
     </ol>
 </nav>
 
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Berhasil!</strong> {{ session('success') }}.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Gagal!</strong> {{ $error }}.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endforeach
+@endif
+
 <div class="card shadow mb-3">
     <div class="card-body">
         <div class="table-responsive">
@@ -18,11 +34,11 @@
                         <th scope="col">NIM</th>
                         <th scope="col">Nama Mahasiswa</th>
                         <th scope="col">Jumlah Tunggakan</th>
+                        <th scope="col">Jenis Tagihan</th>
                         <th scope="col">Opsi Penundaan</th>
                         <th scope="col">Tahun Ajaran</th>
                         <th scope="col">Semester</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,19 +46,25 @@
                         <td>{{ $dokumen->student->nim }}</td>
                         <td>{{ $dokumen->student->user->name }}</td>
                         <td>Rp. {{ number_format( $dokumen->jumlah_tunggakan) }}</td>
+                        <td>{{ $dokumen->jenis_tagihan }}</td>
                         <td>{{ $dokumen->opsi_penundaan }}</td>
                         <td>{{ $dokumen->tahun_ajaran }}</td>
                         <td>{{ $dokumen->semester }}</td>
-                        <td>{{ $dokumen->status->name }}</td>
                         <td>
-                            @if ($dokumen->status_id == 1)
-                            <a target="_blank" href="{{ route('mhs.penundaan.pdf',$dokumen->student->student_id) }}" class="btn btn-secondary m-1 btn-sm">PDF</a>
-                            <form action="{{ route('mhs.penundaan.delete',$dokumen->id) }}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm m-1" onclick="return confirm('Yakin akan mengahpus')">Hapus</button>
-                            </form>
-                            @endif
+                            @switch($dokumen->status_id)
+                                @case(1)
+                                    <span class="badge text bg-secondary">{{ $dokumen->status->name }}</span>
+                                    @break
+                                @case(2)
+                                    <span class="badge text bg-warning">{{ $dokumen->status->name }}</span>
+                                    @break
+                                @case(3)
+                                    <span class="badge text bg-primary">{{ $dokumen->status->name }}</span>
+                                    @break
+
+                                @default
+                                    <span class="badge text bg-success">{{ $dokumen->status->name }}</span>
+                            @endswitch
                         </td>
                     </tr>
                 </tbody>
@@ -75,7 +97,7 @@
                     @php
                         $today = date('Y-m-d');
                     @endphp
-                    @foreach ($dokumen->cicilan as $item)
+                    @foreach ($dokumen->cicilans as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->tgl_jatuh_tempo }}</td>
@@ -104,7 +126,8 @@
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editModal('{{ $item->id }}','{{ $item->tgl_jatuh_tempo }}','{{ $item->cicilan }}')" class="btn btn-sm btn-success">Ajukan Perubahan</a>
                                     @endif
                                     @if ($item->status != 'Lunas')
-                                    <a href="#" onclick="bayar('{{ $item->id }}')" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalBayar" title="Upload Bukti Bayar" >Bayar</a>
+                                    {{--  --}}
+                                    <a href="https://newportal.unsada.ac.id/siakad/list_tagihanmhs" target="_blank" class="btn btn-primary btn-sm">Bayar</a>
                                     @endif
                                 @else
                                     <a href="#" class="btn btn-sm btn-success disabled">Ajukan Perubahan</a>
@@ -155,13 +178,19 @@
                             </td>
 
                             <td>
-                                @if ($item->perubahan->status !== 'Diproses')
-                                <form action="{{ route('mhs.perubahan-cicilan.delete',$item->perubahan->id) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin membatalkan ajuan perubahan cicilan ini?')"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                </form>
-                                @endif
+                                @switch($item->perubahan->status)
+                                    @case('Diajukan')
+                                        <form action="{{ route('mhs.perubahan-cicilan.delete',$item->perubahan->id) }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin membatalkan ajuan perubahan cicilan ini?')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </form>
+                                        @break
+                                    @case('Diproses')
+                                        <span class="badge text-outline-secondary">Diproses</span>
+                                        @break
+                                    @default
+                                @endswitch
                             </td>
                         </tr>
 
