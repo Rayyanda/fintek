@@ -20,6 +20,7 @@
                         <th>#</th>
                         <th>NIM</th>
                         <th>Nama</th>
+                        <th>Email</th>
                         <th>Prodi</th>
                         <th>Jenis Kelas</th>
                         <th>Penundaan</th>
@@ -32,6 +33,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->nim }}</td>
                             <td>{{ $item->user->name }}</td>
+                            <td>{{ $item->user->email }}</td>
                             <td>{{ $item->prodi }}</td>
                             <td>{{ $item->jenis_kelas }}</td>
                             <td class="text-center" >

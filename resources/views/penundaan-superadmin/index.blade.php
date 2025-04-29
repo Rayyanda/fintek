@@ -80,7 +80,7 @@
                             </td>
                             <td>
                                 @if ($dokumen->status_id !== 4)
-                                <a title="Update Status" href="#" data-bs-toggle="modal" onclick="loadData('{{ $dokumen->id }}','{{ $dokumen->student->nim }}','{{ $dokumen->student->user->name }}','{{ $dokumen->status_id }}')" data-bs-target="#editModal" class="btn btn-success"><i class="fa fa-pencil-alt"></i></a>
+                                <a title="Update Status" href="#" data-bs-toggle="modal" onclick="loadData('{{ $dokumen->id }}','{{ $dokumen->student->nim }}','{{ $dokumen->student->user->name }}','{{ $dokumen->status_id }}')" data-bs-target="#editModal" class="btn btn-success btn-sm"><i class="fa fa-pencil-alt"></i></a>
                                 @else
                                 <form action="{{ route('superadmin.penundaan.show',$dokumen->student->student_id) }}" method="get">
                                     <input type="text" name="tahun_ajaran" id="tahunAjaran" value="{{ $dokumen->tahun_ajaran }}" hidden>

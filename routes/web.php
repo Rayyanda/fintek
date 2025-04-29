@@ -91,6 +91,16 @@ Route::prefix('mhs')->middleware(['auth','role:mahasiswa'])->group(function(){
 //superadmin
 Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(function(){
 
+    //get notification
+    Route::get('/notif',[SuperadminPenundaanController::class,'notifikasi'])->name('superadmin.notification.get');
+
+    Route::get('/notifikasi',function(){
+        $notifikasi = Auth::user()->notifications;
+        return view('notification',['notifications'=>$notifikasi]);
+    })->name('superadmin.notifikasi.index');
+
+    Route::post('/notifikasi/read',[UserController::class,'readnotif'])->name('superadmin.notification.read');
+
     //keuangan
     Route::prefix('keuangan')->group(function(){
 
@@ -104,6 +114,22 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
             Route::get('/filter',[SuperadminPenundaanController::class,'search'])->name('superadmin.penundaan.filter');
 
             Route::get('/{student_id}/show',[SuperadminPenundaanController::class,'show'])->name('superadmin.penundaan.show');
+
+        });
+
+        //pencicilan
+        Route::prefix('pencicilan')->group(function(){
+
+            Route::get('/',[CicilanController::class,'index'])->name('superadmin.pencicilan.index');
+
+            //set lunas
+            Route::post('/set-lunas',[CicilanController::class,'set_lunas'])->name('superadmin.pencicilan.set-lunas');
+
+            //send warning
+            Route::post('/send-personl-warning',[CicilanController::class,'sendPersonalWarning'])->name('superadmin.pencicilan.send-personal-warning');
+
+            //send to all student
+            Route::post('/send-warning',[CicilanController::class,'sendWarning'])->name('superadmin.send-warning');
 
         });
 
@@ -152,6 +178,11 @@ Route::prefix('superadmin')->middleware(['auth','role:superadmin'])->group(funct
 
         //index
         Route::get('/',[UserController::class,'index'])->name('superadmin.users.index');
+
+        //setting
+        Route::get('/settings',function(){
+            return view('superadmin.settings');
+        })->name('superadmin.settings');
 
     });
 

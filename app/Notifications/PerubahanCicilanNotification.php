@@ -7,18 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PengajuanNotifcation extends Notification
+class PerubahanCicilanNotification extends Notification
 {
     use Queueable;
 
     protected $pengajuan;
     protected $pengirim;
+
     /**
      * Create a new notification instance.
      */
     public function __construct($pengajuan, $pengirim)
     {
-        //
         $this->pengajuan = $pengajuan;
         $this->pengirim = $pengirim;
     }
@@ -33,25 +33,24 @@ class PengajuanNotifcation extends Notification
         return ['database'];
     }
 
-    public function toDatabase($notifiable)
-    {
-        return [
-            'title'=>'Pengajuan Baru',
-            'message'=>'Pengajuan Penundaan baru telah masuk',
-            'pengirim'=>$this->pengirim,
-        ];
-    }
-
     /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Pengajuan Baru Masuk.')
-            ->line('')
-            ->action('Lihat', url('/dashboard'))
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
+    }
+
+    public function toDatabase()
+    {
+        return [
+            'title'=> 'Pengajuan Perubahan Cicilan',
+            'message'=>'Pengajuan perubahan cicilan baru telah masuk. Silahkan di cek.',
+            'pengirim' => $this->pengirim
+        ];
     }
 
     /**

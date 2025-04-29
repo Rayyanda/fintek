@@ -12,9 +12,13 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="{{ asset('css/template-css.css') }}" rel="stylesheet" />
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
+        @include('sweetalert2::index')
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="{{ route('home') }}">FinTek</a>
@@ -27,12 +31,29 @@
                     <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                 </div>
             </form>
+            @if (auth()->user()->role === 'superadmin')
+            <div class="dropdown ms-auto">
+                <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell fa-lg text-secondary"></i>
+                    <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                        0
+                    </span>
+                </a>
+                {{-- <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    🔔<i class="fa fa-bell fa-fw" aria-hidden="true"></i>
+                    <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                </a> --}}
+                <ul id="notif-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="width: 300px;">
+                    <li><span class="dropdown-item text-muted">Loading...</span></li>
+                </ul>
+            </div>
+            @endif
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="{{ route('superadmin.settings') }}">Settings</a></li>
                         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                         @if (auth()->user()->role === 'mahasiswa')
                         <li><a href="{{ route('auth.profile') }}" class="dropdown-item">{{ __('My Profile') }}</a></li>
@@ -89,7 +110,7 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link {{ request()->routeIs('superadmin.penundaan.index') ? 'active' : '' }} " href="{{ route('superadmin.penundaan.index') }}">Pengajuan Penundaan</a>
                                     <a class="nav-link {{ request()->routeIs('superadmin.perubahan-cicilan.index') ? 'active' : '' }} " href="{{ route('superadmin.perubahan-cicilan.index') }}">Pengajuan Perubahan</a>
-                                    <a class="nav-link" href="#">Berjalan</a>
+                                    <a class="nav-link {{ request()->routeIs('superadmin.pencicilan.index') ? 'active' : '' }} " href="{{ route('superadmin.pencicilan.index') }}">Pencicilan Berjalan</a>
                                 </nav>
                             </div>
 
@@ -242,6 +263,70 @@
                 </footer>
             </div>
         </div>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Hello, world! This is a toast message.
+              </div>
+            </div>
+          </div>
+        @if (auth()->user()->role === 'superadmin')
+        <script>
+            // setInterval(() => {
+            // fetch('{{ route('superadmin.notification.get') }}')
+            //     .then(res => res.json())
+            //     .then(data => {
+            //     if (data.length > 0) {
+            //         alert('Ada notifikasi baru!');
+
+            //         const toastLiveExample = document.getElementById('liveToast')
+
+            //         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            //         toastBootstrap.show()
+            //     }
+            //     });
+            // }, 10000);
+            function fetchNotifications() {
+            $.ajax({
+                url: '{{ route("superadmin.notification.get") }}',
+                method: 'GET',
+                success: function(response) {
+                    let dropdown = '';
+                    let count = response.length;
+                    //console.log(response);
+                    if (count > 0) {
+                        response.forEach(function(notification) {
+                            dropdown += `
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('superadmin.notifikasi.index') }}">
+                                        <div class="fw-bold">${notification.data.title}</div>
+                                        <div class="small text-muted">${notification.data.message}</div>
+                                        <div class="small text-muted">${new Date(notification.created_at).toLocaleString()}</div>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            `;
+                        });
+                    } else {
+                        dropdown = `<li><span class="dropdown-item text-muted">Tidak ada notifikasi baru</span></li>`;
+                    }
+
+                    $('#notif-count').text(count);
+                    $('#notif-dropdown').html(dropdown);
+                }
+            });
+        }
+
+        setInterval(fetchNotifications, 5000); // 5 detik sekali
+        fetchNotifications();
+        </script>
+        @endif
         @yield('script')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{ asset('js/script.js') }}"></script>

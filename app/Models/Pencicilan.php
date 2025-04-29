@@ -19,7 +19,7 @@ class Pencicilan extends Model
 
     public function penundaan()
     {
-        return $this->belongsTo(Penundaan::class, 'penundaan_id', 'penundaan_id');
+        return $this->belongsTo(Penundaan::class, 'penundaan_id', 'id');
     }
 
     public function perubahan()

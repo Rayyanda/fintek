@@ -7,6 +7,7 @@ use App\Models\Penundaan;
 use App\Models\Status;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PenundaanController extends Controller
 {
@@ -15,6 +16,12 @@ class PenundaanController extends Controller
     {
         $penundaan = Penundaan::with(['student','status','cicilans','cicilans.perubahan'])->get();
         $status = Status::all();
+
+        // $admin = Auth::user()->notifications;
+        // if (isset($admin)) {
+        //     # code...
+        //     $admin->markAsRead();
+        // }
 
         return view('penundaan-superadmin.index',['penundaans'=>$penundaan,'status'=>$status]);
     }
@@ -51,5 +58,10 @@ class PenundaanController extends Controller
             ->with(['student.user','student','status','cicilans','cicilans.perubahan'])
             ->first();
         return view('penundaan-superadmin.show',['penundaan'=>$student]);
+    }
+
+    public function notifikasi()
+    {
+        return Auth::user()->unreadNotifications;
     }
 }

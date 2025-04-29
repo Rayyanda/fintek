@@ -11,11 +11,13 @@ use App\Models\Student;
 use App\Models\Tagihan;
 use App\Models\TahunAjaran;
 use App\Models\User;
+use App\Notifications\PengajuanNotifcation;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class PenundaanController extends Controller
@@ -118,7 +120,12 @@ class PenundaanController extends Controller
         }
 
         //membuat notifikasi ke admin
-        //$admins = User::whereIn('role',['admin','superadmin'])->get();
+        $admins = User::whereIn('role',['admin','superadmin'])->get();
+        foreach ($admins as $admin) {
+            # code...
+            $admin->notify(new PengajuanNotifcation($penundaan, Auth::user()->name));
+        }
+        //Notification::send($admins,new PengajuanNotifcation($penundaan));
 
         return redirect()->route('mhs.penundaan.index')->with('success','Dokumen telah dibuat');
     }

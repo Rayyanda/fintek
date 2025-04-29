@@ -3,11 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pencicilan;
+use App\Models\TahunAjaran;
+use App\Models\User;
+use App\Notifications\StudentNotification;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use SweetAlert2\Laravel\Swal;
 
 class CicilanController extends Controller
 {
+    public function index()
+    {
+        $tanggalSekarang = Carbon::now();
+        //$tahun = $tanggalSekarang->year;
+        $bulan = $tanggalSekarang->month;
+        $tahunAjaran = TahunAjaran::where('is_active','=',1)->first();
+        $pencicilans = Pencicilan::whereMonth('tgl_jatuh_tempo','=',$bulan)
+            ->with(['penundaan','penundaan.student','penundaan.student.user','perubahan'])
+            ->get();
+        return view('pencicilan-berjalan.index',compact('tahunAjaran','pencicilans'));
+    }
 
     public function opsi1($penundaan_id, $tunggakan, $sks)
     {
@@ -132,5 +147,71 @@ class CicilanController extends Controller
 
 
         //return redirect()->back()->with('success','Berhasil update data');
+    }
+
+    public function set_lunas(Request $request)
+    {
+        $request->validate([
+            'cicilan_id'=> 'required|exists:pencicilans,id'
+        ]);
+
+        $pencicilan = Pencicilan::where('id','=',$request->cicilan_id)->update([
+            'status' => "Lunas"
+        ]);
+
+        return back()->with('success','Berhasil menandai sebagai lunas');
+    }
+
+    public function sendPersonalWarning(Request $request)
+    {
+        $validate = $request->validate([
+            'user_id',
+            'cicilan_id'
+        ]);
+
+        $student = User::where('user_id','=',$request->user_id)->first();
+        $cicilan = Pencicilan::where('id','=',$request->cicilan_id)->first();
+        $student->notify(new StudentNotification($cicilan));
+
+        Swal::success([
+            'title' => 'Berhasil Mengirim email'
+        ]);
+
+        return response()->json([
+            'status'=>'success',
+            'message' => 'Berhasil mengirim pesan'
+        ], 200);
+        //return back()->with('success','Berhasil mengirim peringatan');
+    }
+
+    public function sendWarning(Request $request)
+    {
+        $validate = $request->validate([
+            'user.*.*' => 'required|min:1'
+        ]);
+
+        $data = $request->input('user');
+
+        foreach ($data as $userId => $dt) {
+            # code...
+            foreach ($dt as $cicilan_id => $value) {
+                # code...
+                $student = User::where('user_id','=', $userId)->first();
+                $pencicilans = Pencicilan::where('id','=',$cicilan_id)
+                    ->with(['penundaan','penundaan.student','penundaan.student.user','perubahan'])
+                    ->first();
+                $student->notify(new StudentNotification($pencicilans));
+            }
+        }
+
+        Swal::success([
+            'title' => 'Berhasil Mengirim email'
+        ]);
+
+        return response()->json([
+            'status'=>'success',
+            'message' => 'Berhasil mengirim pesan'
+        ], 200);
+        //return back()->with('success','Berhasil mengirim pesan');
     }
 }

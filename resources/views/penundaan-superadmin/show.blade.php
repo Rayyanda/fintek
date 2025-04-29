@@ -78,16 +78,21 @@
                 </thead>
                 <tbody>
                     @foreach ($penundaan->cicilans as $item)
-                        <tr>
+                        <tr class="align-items-center" >
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_jatuh_tempo)->format('d M Y') }}</td>
                             <td>Rp. {{ number_format($item->cicilan) }}</td>
                             <td>{{ $item->status }}</td>
                             <td>{{ $item->tgl_pembayaran }}</td>
-                            <td>
+                            <td class="">
                                 @if ($item->status != 'Lunas')
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#sendNotifModal" title="Kirim pemberitahuan" class="btn btn-primary btn-sm mr-1 mb-1"><i class="fa fa-share" aria-hidden="true"></i></a>
-                                <a href="#" class="btn btn-success btn-sm mr-1 mb-1" title="Periksa status"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#sendNotifModal" onclick="sendMail('{{ $item->id }}')" title="Kirim pemberitahuan" class="btn btn-primary btn-sm mr-1 mb-1"><i class="fa fa-share" aria-hidden="true"></i></a>
+                                <a href="#" class="btn btn-warning btn-sm mr-1 mb-1" title="Periksa status"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <form action="{{ route('superadmin.pencicilan.set-lunas') }}" method="post">
+                                    @csrf
+                                    <input type="number" name="cicilan_id" id="cicilanId" value="{{ $item->id }}" hidden>
+                                    <button type="submit" onclick="return confirm('Apakah anda ingin menandai sebagai Lunas?')" title="Tanda Lunas" class="btn btn-sm btn-success mr-1 mb-1"><i class="fa fa-check"></i></button>
+                                </form>
                                 @endif
                             </td>
                         </tr>
@@ -197,13 +202,15 @@
 <div class="modal fade" id="sendNotifModal" tabindex="-1" aria-labelledby="sendNotifModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="#" method="post">
+            <form id="sendWarning">
                 @csrf
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="sendNotifModalLabel">Kirim Pemberitahuan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input type="text" name="user_id" value="{{ $penundaan->student->user_id }}" hidden id="">
+                    <input type="text" name="cicilan_id" hidden id="cicilanIdForMail">
                     <div class="row mb-3 align-items-center">
                         <label for="namaPenerima" class="col-form-label col-md-2">Nama</label>
                         <div class="col-md-10">
@@ -229,15 +236,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3 align-items-center">
-                        <label for="pesan" class="col-form-label col-md-2">Pesan</label>
-                        <div class="col-md-10">
-                            <div class="form-floating">
-                                <textarea name="pesan" id="pesan" class="form-control" placeholder="Pesan" style="height: 100px"></textarea>
-                                <label for="pesan">Pesan</label>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="responseMessage" class="mt-3"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -254,5 +253,43 @@
         document.getElementById("TglJatuhTempo").value = tgl_jatuh_tempo;
         document.getElementById("perubahanCicilan").value = cicilan;
     }
+    function sendMail(id)
+    {
+        document.getElementById('cicilanIdForMail').value = id;
+    }
+    $(document).ready(function() {
+        $('#sendWarning').on('submit', function(e) {
+            e.preventDefault();
+
+            // Tampilkan loading indicator
+            $('#responseMessage').html('<div class="alert alert-info">Memproses <i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>');
+
+            $.ajax({
+                url: '{{ route('superadmin.pencicilan.send-personal-warning') }}', // Sesuaikan dengan route Anda
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if(response.status === 'success') {
+                        window.location.reload();
+                    } else {
+                        $('#responseMessage').html(
+                            `<div class="alert alert-danger">
+                                ${response.message || 'Terjadi kesalahan'}
+                            </div>`
+                        );
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Terjadi kesalahan pada server';
+                    if(xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    $('#responseMessage').html(
+                        `<div class="alert alert-danger">${errorMsg}</div>`
+                    );
+                }
+            });
+        });
+    });
 </script>
 @endsection

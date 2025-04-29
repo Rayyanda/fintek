@@ -7,20 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PengajuanNotifcation extends Notification
+class StudentNotification extends Notification
 {
     use Queueable;
 
-    protected $pengajuan;
-    protected $pengirim;
+    protected $cicilan;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($pengajuan, $pengirim)
+    public function __construct($cicilan)
     {
         //
-        $this->pengajuan = $pengajuan;
-        $this->pengirim = $pengirim;
+        $this->cicilan = $cicilan;
+
     }
 
     /**
@@ -30,16 +30,7 @@ class PengajuanNotifcation extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
-    }
-
-    public function toDatabase($notifiable)
-    {
-        return [
-            'title'=>'Pengajuan Baru',
-            'message'=>'Pengajuan Penundaan baru telah masuk',
-            'pengirim'=>$this->pengirim,
-        ];
+        return ['mail'];
     }
 
     /**
@@ -48,10 +39,13 @@ class PengajuanNotifcation extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Pengajuan Baru Masuk.')
-            ->line('')
-            ->action('Lihat', url('/dashboard'))
-            ->line('Thank you for using our application!');
+            ->subject('Peringatan Jatuh Tempo Cicilan')
+            ->greeting('Halo ' . $notifiable->name . ',')
+            ->line('Anda memiliki cicilan yang akan jatuh tempo.')
+            ->line('Nominal: Rp' . number_format($this->cicilan->cicilan, 0, ',', '.'))
+            ->line('Tanggal Jatuh Tempo: ' . \Carbon\Carbon::parse($this->cicilan->tgl_jatuh_tempo)->format('d M Y'))
+            ->action('Bayar Sekarang', url('https://newportal.unsada.ac.id/siakad/list_tagihanmhs')) // Link ke halaman bayar
+            ->line('Segera lakukan pembayaran untuk menghindari denda.');
     }
 
     /**
