@@ -11,18 +11,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
-<div class="mb-3">
-    <a href="#" data-bs-target="#storeDataModal" data-bs-toggle="modal" class="btn btn-primary">Tambah Data</a>
-</div>
 <div class="card mb-3 shadow">
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+        <div class="table-responsive p-2">
+            <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>NIM</th>
                         <th>Nama</th>
+                        <th>Email</th>
                         <th>Prodi</th>
                         <th>Jenis Kelas</th>
                         <th>Penundaan</th>
@@ -35,15 +33,25 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item->nim }}</td>
                             <td>{{ $item->user->name }}</td>
+                            <td>{{ $item->user->email }}</td>
                             <td>{{ $item->prodi }}</td>
                             <td>{{ $item->jenis_kelas }}</td>
-                            <td>{{ ($item->penundaan != null ? 'Ada' : 'Tidak Ada') }}</td>
+                            <td class="text-center" >
+                                @if ($item->penundaan != null)
+                                <form action="{{ route('superadmin.penundaan.show',$item->student_id) }}" method="get">
+                                    <input type="text" name="tahun_ajaran" id="tahunAjaran" value="{{ $tahun_ajaran->tahun_ajaran }}" hidden>
+                                    <input type="text" name="semester" id="semester" value="{{ $tahun_ajaran->semester }}" hidden>
+                                    <button type="submit" class="btn btn-success btn-sm" title="Lihat Detail"><i class="fa fa-eye"></i></button>
+                                </form>
+                                @else
+                                <span class="badge text-bg-warning">Tidak ada</span>
+                                @endif
+                            </td>
                             <td></td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            {{ $mahasiswa->links() }}
         </div>
     </div>
 </div>

@@ -17,14 +17,14 @@
 <div class="card mb-3 shadow-lg">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+            <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Barang</th>
                         <th>Lokasi</th>
                         <th>Stok</th>
-                        <th>aksi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider" >
@@ -47,7 +47,6 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $inventaris->links() }}
         </div>
     </div>
 </div>

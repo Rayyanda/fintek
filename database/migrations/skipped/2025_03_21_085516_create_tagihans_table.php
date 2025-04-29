@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('tagihan_id')->unique();
             $table->foreignUuid('student_id')->references('student_id')->on('students')->onDelete('cascade');
+            $table->string('tahun_ajaran');
+            $table->enum('semester',['Ganjil','Genap']);
             $table->string('jenis_tagihan');
             $table->integer('nominal');
             $table->integer('denda')->default(0);
@@ -22,6 +24,7 @@ return new class extends Migration
             $table->integer('total')->default(0);
             $table->integer('terbayar')->default(0);
             $table->integer('sisa')->default(0);
+            $table->string('status')->default('Belum Divalidasi');
             $table->timestamps();
         });
     }

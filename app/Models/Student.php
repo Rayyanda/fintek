@@ -39,9 +39,10 @@ class Student extends Model
         return $this->belongsTo(User::class,'user_id','user_id');
     }
 
-    //relasi one-to-one ke penundaan
-    public function penundaan():HasOne
+    //relasi one-to-many ke penundaan
+    public function penundaan():HasMany
     {
-        return $this->hasOne(Penundaan::class,'student_id','student_id')->latest();
+        return $this->hasMany(Penundaan::class,'student_id','student_id')->latest();
     }
+
 }

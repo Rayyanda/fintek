@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('rkat_id')->references('rkat_id')->on('rkats')->onDelete('cascade');
             $table->date('tanggal')->nullable();
             $table->string('peruntukkan');
+            $table->integer('harga');
             $table->integer('jumlah');
             $table->string('satuan');
             $table->integer('total');

@@ -16,4 +16,14 @@ class Pencicilan extends Model
         'tgl_pembayaran',
         'bukti'
     ];
+
+    public function penundaan()
+    {
+        return $this->belongsTo(Penundaan::class, 'penundaan_id', 'id');
+    }
+
+    public function perubahan()
+    {
+        return $this->hasOne(PerubahanCicilan::class,'cicilan_id','id');
+    }
 }

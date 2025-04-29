@@ -17,7 +17,8 @@ return new class extends Migration
             $table->year('tahun_anggaran');
             $table->string('nama_rkat')->nullable();
             $table->integer('anggaran_tercairkan');
-            $table->integer('anggaran_terpakai');
+            $table->integer('anggaran_terpakai')->default(0);
+            $table->enum('status',[1,2]);
             $table->timestamps();
         });
     }

@@ -12,9 +12,13 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="{{ asset('css/template-css.css') }}" rel="stylesheet" />
+        <!-- jQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
+        @include('sweetalert2::index')
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="{{ route('home') }}">FinTek</a>
@@ -27,12 +31,29 @@
                     <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                 </div>
             </form>
+            @if (auth()->user()->role === 'superadmin')
+            <div class="dropdown ms-auto">
+                <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell fa-lg text-secondary"></i>
+                    <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                        0
+                    </span>
+                </a>
+                {{-- <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    🔔<i class="fa fa-bell fa-fw" aria-hidden="true"></i>
+                    <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                </a> --}}
+                <ul id="notif-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="width: 300px;">
+                    <li><span class="dropdown-item text-muted">Loading...</span></li>
+                </ul>
+            </div>
+            @endif
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="{{ route('superadmin.settings') }}">Settings</a></li>
                         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                         @if (auth()->user()->role === 'mahasiswa')
                         <li><a href="{{ route('auth.profile') }}" class="dropdown-item">{{ __('My Profile') }}</a></li>
@@ -62,6 +83,10 @@
 
                             @if (auth()->user()->role === 'mahasiswa')
 
+                            {{-- <a href="{{ route('mhs.tagihan.index') }}" class="nav-link {{ request()->routeIs('mhs.tagihan.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
+                                Tagihan
+                            </a> --}}
                             <a href="{{ route('mhs.penundaan.index') }}" class="nav-link {{ request()->routeIs('mhs.penundaan.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-text" aria-hidden="true"></i></div>
                                 Pengajuan Penundaan
@@ -71,6 +96,11 @@
 
                             <div class="sb-sidenav-menu-heading">Keuangan</div>
 
+                            {{-- <a href="{{ route('admin.tagihan.index') }}" class="nav-link {{ request()->routeIs('admin.tagihan.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-line-chart" aria-hidden="true"></i></div>
+                                Tagihan Mahasiswa
+                            </a> --}}
+
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fa fa-credit-card"></i></div>
                                 Penundaan
@@ -79,8 +109,8 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link {{ request()->routeIs('superadmin.penundaan.index') ? 'active' : '' }} " href="{{ route('superadmin.penundaan.index') }}">Pengajuan Penundaan</a>
-                                    <a class="nav-link" href="#">Pengajuan Perubahan</a>
-                                    <a class="nav-link" href="#">Berjalan</a>
+                                    <a class="nav-link {{ request()->routeIs('superadmin.perubahan-cicilan.index') ? 'active' : '' }} " href="{{ route('superadmin.perubahan-cicilan.index') }}">Pengajuan Perubahan</a>
+                                    <a class="nav-link {{ request()->routeIs('superadmin.pencicilan.index') ? 'active' : '' }} " href="{{ route('superadmin.pencicilan.index') }}">Pencicilan Berjalan</a>
                                 </nav>
                             </div>
 
@@ -97,7 +127,12 @@
                                 </nav>
                             </div> --}}
 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRkat" aria-expanded="false" aria-controls="collapseRkat">
+                            <a href="{{ route('superadmin.rkat.index') }}" class="nav-link {{ request()->routeIs('superadmin.rkat.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-line-chart" aria-hidden="true"></i></div>
+                                RKAT
+                            </a>
+
+                            {{-- <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRkat" aria-expanded="false" aria-controls="collapseRkat">
                                 <div class="sb-nav-link-icon"><i class="fa fa-line-chart" aria-hidden="true"></i></div>
                                 RKAT
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -108,7 +143,7 @@
                                     <a class="nav-link" href="#">Proses</a>
                                     <a class="nav-link" href="#">Berjalan</a>
                                 </nav>
-                            </div>
+                            </div> --}}
 
                             <div class="sb-sidenav-menu-heading">Operasional</div>
                             <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.index') ? 'active' : '' }} ">
@@ -116,6 +151,10 @@
                                 Inventaris
                             </a>
 
+                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-font-awesome" aria-hidden="true"></i></div>
+                                Tahun Ajaran
+                            </a>
                             <div class="sb-sidenav-menu-heading">Pengguna</div>
 
                             <a href="{{ route('superadmin.mahasiswa.index') }}" class="nav-link {{ request()->routeIs('superadmin.mahasiswa.index') ? 'active' : '' }} ">
@@ -126,9 +165,20 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-circle" aria-hidden="true"></i></div>
                                 Dosen
                             </a>
-                            <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.index') ? 'active' : '' }} ">
+                            <a href="{{ route('superadmin.users.index') }}" class="nav-link {{ request()->routeIs('superadmin.users.index') ? 'active' : '' }} ">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
-                                User
+                                Users
+                            </a>
+
+
+
+
+                            @endif
+
+                            @if (auth()->user()->role === 'admin')
+                            <a href="{{ route('tahunAjaran.index') }}" class="nav-link {{ request()->routeIs('tahunAjaran.index') ? 'active' : '' }} ">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users" aria-hidden="true"></i></div>
+                                Tahun Ajaran
                             </a>
 
                             @endif
@@ -213,12 +263,77 @@
                 </footer>
             </div>
         </div>
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Hello, world! This is a toast message.
+              </div>
+            </div>
+          </div>
+        @if (auth()->user()->role === 'superadmin')
+        <script>
+            // setInterval(() => {
+            // fetch('{{ route('superadmin.notification.get') }}')
+            //     .then(res => res.json())
+            //     .then(data => {
+            //     if (data.length > 0) {
+            //         alert('Ada notifikasi baru!');
+
+            //         const toastLiveExample = document.getElementById('liveToast')
+
+            //         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            //         toastBootstrap.show()
+            //     }
+            //     });
+            // }, 10000);
+            function fetchNotifications() {
+            $.ajax({
+                url: '{{ route("superadmin.notification.get") }}',
+                method: 'GET',
+                success: function(response) {
+                    let dropdown = '';
+                    let count = response.length;
+                    //console.log(response);
+                    if (count > 0) {
+                        response.forEach(function(notification) {
+                            dropdown += `
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('superadmin.notifikasi.index') }}">
+                                        <div class="fw-bold">${notification.data.title}</div>
+                                        <div class="small text-muted">${notification.data.message}</div>
+                                        <div class="small text-muted">${new Date(notification.created_at).toLocaleString()}</div>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            `;
+                        });
+                    } else {
+                        dropdown = `<li><span class="dropdown-item text-muted">Tidak ada notifikasi baru</span></li>`;
+                    }
+
+                    $('#notif-count').text(count);
+                    $('#notif-dropdown').html(dropdown);
+                }
+            });
+        }
+
+        setInterval(fetchNotifications, 5000); // 5 detik sekali
+        fetchNotifications();
+        </script>
+        @endif
+        @yield('script')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{ asset('js/script.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         {{-- <script src="assets/demo/chart-area-demo.js"></script>
         <script src="assets/demo/chart-bar-demo.js"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="{{ asset('js/datatables-simple-demo.js') }}"></script>
     </body>
 </html>

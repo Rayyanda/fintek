@@ -10,7 +10,7 @@ class InventarisController extends Controller
     //
     public function index()
     {
-        $inventaris = Inventaris::paginate(15);
+        $inventaris = Inventaris::get();
         return view('inventaris.index',['inventaris'=>$inventaris]);
     }
 

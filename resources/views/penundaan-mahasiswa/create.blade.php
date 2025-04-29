@@ -10,13 +10,12 @@
     $user = auth()->user()->student;
     @endphp
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @foreach ($errors->all() as $error)
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Gagal!</strong> {{ $error }}.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endforeach
     @endif
 
     <div class="card shadow mb-3">
@@ -237,10 +236,9 @@
                     <div class="col-md-4">
                         <div class="form-floating">
                             <select class="form-select @error('tahun_ajaran') is-invalid @enderror" id="tahunAjaran" name="tahun_ajaran">
-                              <option selected>Pilih Tahun Ajaran</option>
-                              <option value="2025/2026">2025/2026</option>
-                              <option value="2026/2027">2026/2027</option>
-                              <option value="2027/2028">2027/2028</option>
+                                @foreach ($tahun_ajaran as $item)
+                                    <option value="{{ $item->tahun_ajaran }}">{{ $item->tahun_ajaran }}</option>
+                                @endforeach
                             </select>
                             <label for="tahunAjaran">Tahun Ajaran</label>
                         </div>
@@ -254,7 +252,6 @@
                     <div class="col-md-4">
                         <div class="form-floating">
                             <select class="form-select @error('semester') is-invalid @enderror" name="semester" id="semester" required>
-                              <option selected>Pilih Semester</option>
                               <option value="Ganjil">Ganjil</option>
                               <option value="Genap">Genap</option>
                             </select>
@@ -267,7 +264,6 @@
                         @enderror
                     </div>
                 </div>
-
                 <div class="row mb-3 align-items-center">
                     <label for="opsiPenundaan" class="col-form-label col-md-2">Opsi Penundaan</label>
                     <div class="col-md-10">

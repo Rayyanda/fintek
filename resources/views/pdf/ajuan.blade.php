@@ -9,7 +9,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 10px 15px;
             line-height: 1.5;
         }
         .top{
@@ -21,7 +21,7 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
             border-bottom: 1px solid #000;
             padding-bottom: 10px;
         }
@@ -36,7 +36,7 @@
             text-align: center;
             font-weight: bold;
             font-size: 14px;
-            margin: 20px 0;
+            margin: 5px 0;
             text-decoration: underline;
         }
         .content {
@@ -88,7 +88,6 @@
     </style>
 </head>
 <body>
-    {{-- <img src="{{ asset('images/logo.jpg') }}" width="100" alt="Logo"> --}}
     <div class="header">
         <div class="university-name">UNIVERSITAS DARMA PERSADA</div>
         <div class="university-address">
@@ -184,7 +183,7 @@
                     <td>:</td>
                     <td>
                         <ol class="m-0" >
-                            @foreach ($penundaans->cicilan as $item)
+                            @foreach ($penundaans->cicilans as $item)
                             <li>Jumlah Pembayaran Rp. <u>{{ number_format($item->cicilan) }}</u> pada tanggal {{ $item->tgl_jatuh_tempo }}</li>
                             @endforeach
                         </ol>

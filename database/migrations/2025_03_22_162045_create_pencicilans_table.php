@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('penundaan_id')->constrained('penundaans','id')->onDelete('cascade');
             $table->date('tgl_jatuh_tempo');
             $table->integer('cicilan');
-            $table->enum('status',['Belum Lunas','Lunas']);
+            $table->enum('status',['Belum Lunas','Lunas','Diproses']);
             $table->date('tgl_pembayaran')->nullable();
             $table->string('bukti')->nullable();
             $table->timestamps();
