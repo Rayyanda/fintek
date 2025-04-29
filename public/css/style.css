@@ -1,3 +1,76 @@
 .bg-local-primary {
     background-color: rgb(191, 49, 49);
 }
+
+/* Table styles */
+.simple-datatables {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 16px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+.simple-datatables thead tr {
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: left;
+}
+
+.simple-datatables th,
+.simple-datatables td {
+    padding: 12px 15px;
+}
+
+/* Body row styles */
+.simple-datatables tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.simple-datatables tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.simple-datatables tbody tr:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+/* Last row border */
+.simple-datatables tbody tr:last-of-type {
+    border-bottom: 2px solid #007bff;
+}
+
+/* Pagination styles */
+.simple-datatables .dataTable-pagination {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.simple-datatables .dataTable-pagination a {
+    color: #007bff;
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.simple-datatables .dataTable-pagination a:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* Search input styles */
+.simple-datatables .dataTable-search {
+    margin-bottom: 20px;
+}
+
+.simple-datatables .dataTable-search input {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+}

@@ -168,7 +168,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane fade" id="nav-dosen" role="tabpanel" aria-labelledby="nav-dosen-tab" tabindex="0">
+                        <div class="tab-pane fade pt-3" id="nav-dosen" role="tabpanel" aria-labelledby="nav-dosen-tab" tabindex="0">
                             <form action="#" method="post">
                                 <div class="row mb-3 align-items-center">
                                     <label for="namaDosen" class="col-form-label col-md-2">{{ __('Name') }}</label>
@@ -178,16 +178,39 @@
                                             <label for="namaDosen">{{ __('Name') }}</label>
                                         </div>
                                     </div>
-                                    <label for="nipDosen" class="col-form-label col-md-2">NIP</label>
-                                    <div class="col-md-4">
+                                    <label for="nidnDosen" class="col-form-label col-md-1">NIDN</label>
+                                    <div class="col-md-5">
                                         <div class="form-floating">
-                                            <input type="text" name="nip_dosen" id="nipDosen" required class="form-control">
-                                            <label for="nipDosen">{{ __('NIP') }}</label>
+                                            <input type="text" name="nidn_dosen" id="nidnDosen" required class="form-control">
+                                            <label for="nipDosen">{{ __('NIDN') }}</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
-
+                                    <label for="emailDosen" class="col-form-label col-md-2">Email</label>
+                                    <div class="col-md-5">
+                                        <div class="form-floating">
+                                            <input type="email" name="email" required placeholder="email@example.com" id="emailDosen" class="form-control">
+                                            <label for="emailDosen">Email</label>
+                                        </div>
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <label for="nipDosen" class="col-form-label col-md-1">NIP</label>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            <input type="text" name="nip_dosen" placeholder="20423438" id="nipDosen" class="form-control @error('nip_dosen') is-invalid @enderror">
+                                            <label for="nipDosen">NIP</label>
+                                        </div>
+                                        @error('nip_dosen')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </form>
                         </div>

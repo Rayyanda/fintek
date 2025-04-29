@@ -34,7 +34,7 @@
                 </div>
             </form>
             <div class="table-responsive p-2">
-                <table id="dataTable" class="table table-striped table-bordered">
+                <table id="dataTable" class="table table-striped table-bordered simple-datatables">
                     <thead>
                         <tr>
                             <th scope="col">No</th>
